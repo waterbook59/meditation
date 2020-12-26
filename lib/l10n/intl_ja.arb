@@ -1,0 +1,77 @@
+{
+  "skipIntroConfirm": "イントロ画面の表示を本当にやめますか？",
+
+  "yes": "はい",
+  "no": "いいえ",
+
+  "introTitle1": "簡単",
+  "introTitle2": "シンプル",
+  "introTitle3": "無料",
+  "introTitle4": "HAPPY",
+
+  "introDesc1": "「Meiso」はあなたの心の健康と安定と幸福をサポートする、超シンプルな瞑想呼吸法アプリです。",
+  "introDesc2": "心が落ち込んだ時、心配や不安に駆られた時、焦りやストレスでイライラしている時、緊張がピークに達した時、このアプリを開いて瞑想して下さい。",
+  "introDesc3": "アプリが奏でる癒しの鐘の音に合わせて、何も考えず、深呼吸を繰り返しましょう。ヨガ伝統の呼吸法（プラーナーヤーマ）が、ネガティブな感情を消し去り、あなたに心の安定をもたらしてくれるでしょう。",
+  "introDesc4": "完全無料・癒しの鐘の音と自然音だけを使った一番シンプルなマインドフルネス瞑想アプリ。ヨガ伝統の呼吸法が、あなたに心の安定と真の幸福をもたらしてくれます。",
+
+  "level": "レベル",
+  "theme": "テーマ",
+  "time": "時間",
+
+  "levelEasy": "入門",
+  "levelNormal": "初級",
+  "levelMid": "中級",
+  "levelHigh": "上級",
+
+  "selectTheme": "テーマを選択して下さい",
+  "themeSilence": "静寂",
+  "themeCave": "洞窟",
+  "themeSpring": "春",
+  "themeSummer": "夏",
+  "themeAutumn": "秋",
+  "themeStream": "清流",
+  "themeWindBell": "風鈴",
+  "themeBonfire": "たき火",
+
+  "selectLevel": "レベルを選択して下さい",
+  "levelSelectEasy": "4秒[吸う]－4秒[止める]－4秒[吐く]",
+  "levelSelectNormal": "4秒[吸う]－4秒[止める]－8秒[吐く]",
+  "levelSelectMid": "4秒[吸う]－8秒[止める]－8秒[吐く]",
+  "levelSelectHigh": "4秒[吸う]－16秒[止める]－8秒[吐く]",
+
+  "selectTime": "時間を選択して下さい",
+  "min5" : "5分",
+  "min10": "10分",
+  "min15" : "15分",
+  "min20" : "20分",
+  "min30": "30分",
+  "min45": "45分",
+  "min60": "60分",
+
+  "timeAdjusted": "呼吸サイクルに合うように残り時間が微調整されることがあります。",
+
+  "startsIn": "瞑想開始まであと",
+  "inhale": "息を吸う",
+  "hold": "止める",
+  "exhale": "息を吐く",
+
+  "beforeStart": "開始前",
+  "pause": "停止中",
+  "finished": "瞑想終了",
+
+  "showSettingsAgain": "設定を変更するにはこの瞑想を一旦終了して下さい",
+
+  "recommend": "友達にすすめる",
+  "donation": "寄付をする",
+  "deleteAd": "広告を消す",
+  "subscription": "サブスクする",
+  "recoverPurchase": "購入の復元",
+
+  "needSubscribe": "このテーマを使うには定期購入が必要です。",
+  "alreadyPurchased": "このアイテムはすでに購入済みです。",
+
+  "recoverPurchaseNotEnabledInAndroid": "購入の復元はAndroidでは使えません。"
+
+
+
+}

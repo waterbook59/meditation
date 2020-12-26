@@ -1,0 +1,76 @@
+{
+  "skipIntro": "",
+  "skipIntroConfirm": "Are you sure to skip intro?",
+
+  "yes": "Yes",
+  "no": "No",
+
+  "introTitle1": "EASY",
+  "introTitle2": "SIMPLE",
+  "introTitle3": "FREE",
+  "introTitle4": "HAPPY",
+
+  "introDesc1": "\"Meiso\" is an ultra-simple meditation exercises app based on the Yoga traditional breathing method called \"Pranayama\".",
+  "introDesc2": "When you feel depressed, anxious or uneasy, frustrated with impatience and stress, and when you feel tension rising, open this application and start meditating.",
+  "introDesc3": "Don’t think anything.  Just breathe deep on the sound of healing singing bowls.  This yogic\ntraditional breathing exercices (Pranayama) will erase your negative feelings and bring you inner peace and real happiness.",
+  "introDesc4": "The simplest mindful meditation which brings you inner peace and happiness!",
+
+  "level": "Level",
+  "theme": "Theme",
+  "time": "Time",
+
+  "levelEasy": "Beginner",
+  "levelNormal": "Novice",
+  "levelMid": "Intermediate",
+  "levelHigh": "Advanced",
+
+  "selectTheme": "Select Theme",
+  "themeSilence": "Silence",
+  "themeCave": "Cave",
+  "themeSpring": "Spring",
+  "themeSummer": "Summer",
+  "themeAutumn": "Autumn",
+  "themeStream": "Stream",
+  "themeWindBell": "WindBell",
+  "themeBonfire": "Bonfire",
+
+  "selectLevel": "Select Level",
+  "levelSelectEasy": "4s[Inhale]－4s[Hold]－4s[Exhale]",
+  "levelSelectNormal": "4s[Inhale]－4s[Hold]－8s[Exhale]",
+  "levelSelectMid": "4s[Inhale]－8s[Hold]－8s[Exhale]",
+  "levelSelectHigh": "4s[Inhale]－16s[Hold]－8s[Exhale]",
+
+  "selectTime": "Select Time",
+  "min5" : "5min",
+  "min10": "10min",
+  "min15" : "15min",
+  "min20" : "20min",
+  "min30": "30min",
+  "min45": "45min",
+  "min60": "60min",
+
+  "timeAdjusted": "The remaining time may be fine-tuned to match the breathing cycle.",
+
+  "startsIn": "Meditation will start in",
+  "inhale": "Inhale",
+  "hold": "Hold",
+  "exhale": "Exhale",
+
+  "beforeStart": "Before Start",
+  "pause": "Paused",
+  "finished": "Finished",
+
+  "showSettingsAgain": "Stop this meditation to change your settings.",
+
+  "recommend": "Recommend",
+  "donation": "Donation",
+  "deleteAd": "Delete Ads",
+  "subscription": "Subscription",
+  "recoverPurchase": "Recover Purchase",
+
+  "needSubscribe": "Need subscription to use this theme.",
+  "alreadyPurchased": "You have already purchased this item.",
+
+  "recoverPurchaseNotEnabledInAndroid": "Recover Purchase is not enabled in Android."
+
+}
