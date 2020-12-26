@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:meditaition/di/providers.dart';
-import 'package:meditaition/view/screens/home_screen.dart';
+import 'package:meditaition/view/screens/home/home_screen.dart';
+import 'package:meditaition/view/screens/intro/intro_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'generated/l10n.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData.dark(),
-      home: HomeScreen(),
+      home: IntroScreen(),
     );
   }
 }
