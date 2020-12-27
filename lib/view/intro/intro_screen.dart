@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:meditaition/generated/l10n.dart';
-import 'package:meditaition/view/screens/home/home_screen.dart';
+import 'package:meditaition/view/common/show_modal_dialog.dart';
+import 'package:meditaition/view/home/home_screen.dart';
+import 'package:meditaition/view/intro/components/skip_intro_dialog.dart';
+import 'package:meditaition/view_models/main_view_model.dart';
+import 'package:provider/provider.dart';
 
 class IntroScreen extends StatelessWidget {
   @override
@@ -10,6 +14,12 @@ class IntroScreen extends StatelessWidget {
     return IntroSlider(
       slides: _createSlides(context),
       onDonePress: () => _openHomeScreen(context),
+      onSkipPress: () => ShowModalDialog(
+          context: context,
+          dialogWidget: SkipIntroDialog(
+            onSkipped: ()=>_skipIntro(context),
+          ),
+          isScrollable: false),
     );
   }
 
@@ -50,5 +60,11 @@ class IntroScreen extends StatelessWidget {
         builder: (context) => HomeScreen(),
       ),
     );
+  }
+  // 「はい」を押すと２度とイントロ出てこない設定
+  _skipIntro(BuildContext context) async{
+    final viewModel = context.read<MainViewModel>();
+    await viewModel.skipIntro();
+    _openHomeScreen(context);
   }
 }
