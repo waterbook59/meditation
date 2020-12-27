@@ -34,10 +34,10 @@ List<SingleChildWidget> viewModels = [
   ChangeNotifierProvider<MainViewModel>(
     create: (context)=>MainViewModel(
       //buildメソッド外なので、context.read()でも良い
-      sharedPrefsRepository:context.read()<SharedPrefsRepository>(),
-      soundManager: context.read()<SoundManager>(),
-      adManager: context.read()<AdManager>(),
-      inAppPurchaseManager: context.read()<InAppPurchaseManager>(),
+      sharedPrefsRepository:context.read<SharedPrefsRepository>(),
+      soundManager: context.read<SoundManager>(),
+      adManager: context.read<AdManager>(),
+      inAppPurchaseManager: context.read<InAppPurchaseManager>(),
     ),
   ),
 ];

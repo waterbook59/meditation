@@ -8,6 +8,7 @@ import 'package:meditaition/view/intro/components/skip_intro_dialog.dart';
 import 'package:meditaition/view_models/main_view_model.dart';
 import 'package:provider/provider.dart';
 
+
 class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -62,8 +63,9 @@ class IntroScreen extends StatelessWidget {
     );
   }
   // 「はい」を押すと２度とイントロ出てこない設定
-  _skipIntro(BuildContext context) async{
+   _skipIntro(BuildContext context) async{
     final viewModel = context.read<MainViewModel>();
+//    final viewModel = Provider.of<MainViewModel>(context,listen: false);
     await viewModel.skipIntro();
     _openHomeScreen(context);
   }
