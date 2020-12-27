@@ -15,4 +15,8 @@ class MainViewModel extends ChangeNotifier{
   Future<void> skipIntro() async{
     await sharedPrefsRepository.skipIntro();
   }
+
+  Future<bool> isSkipIntroScreen() async{
+    return await sharedPrefsRepository.isSkipIntroScreen();
+  }
 }

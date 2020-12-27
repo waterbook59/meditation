@@ -14,6 +14,7 @@ class IntroScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntroSlider(
       slides: _createSlides(context),
+      //todo doneした時もprefをtrueにして２度表示しないようにする
       onDonePress: () => _openHomeScreen(context),
       onSkipPress: () => ShowModalDialog(
           context: context,
