@@ -16,7 +16,7 @@ class IntroScreen extends StatelessWidget {
       slides: _createSlides(context),
       //todo doneした時もprefをtrueにして２度表示しないようにする
       onDonePress: () => _openHomeScreen(context),
-      onSkipPress: () => ShowModalDialog(
+      onSkipPress: () => showModalDialog(
           context: context,
           dialogWidget: SkipIntroDialog(
             onSkipped: ()=>_skipIntro(context),
@@ -25,7 +25,8 @@ class IntroScreen extends StatelessWidget {
     );
   }
 
-  _createSlides(BuildContext context) {
+  ///List<Slide>の型明示
+  List<Slide> _createSlides(BuildContext context) {
     final appTheme = Theme.of(context); //今回はThemeData.dark(),
     return [
       Slide(
@@ -55,16 +56,18 @@ class IntroScreen extends StatelessWidget {
     ];
   }
 
-  _openHomeScreen(BuildContext context) {
+  ///戻り値の型、MaterialPageRouteの型をvoidに設定
+  void _openHomeScreen(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => HomeScreen(),
       ),
     );
   }
   // 「はい」を押すと２度とイントロ出てこない設定
-   _skipIntro(BuildContext context) async{
+  ///Future<void>戻り値型追加
+  Future<void>  _skipIntro(BuildContext context) async{
     final viewModel = context.read<MainViewModel>();
 //    final viewModel = Provider.of<MainViewModel>(context,listen: false);
     await viewModel.skipIntro();
