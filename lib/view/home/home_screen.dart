@@ -39,26 +39,30 @@ class HomeScreen extends StatelessWidget {
             selector: (context, viewModel) => viewModel.userSettings,
             builder: (context, userSettings, child) {
               return userSettings == null
-                  ? Center(
-                      child: CircularProgressIndicator(),
+                  ? const Center(
+                      child: const CircularProgressIndicator(),
                     )
                   : Stack(
+                      fit: StackFit.expand,//全画面表示に必要
                       children: [
                         //1階
                         //todo グラデーション付背景画像
-                        DecoratedBackground(),
+                        DecoratedBackground(theme: meisoThemes[userSettings.themeId],),
                         //2階
-                        Column(
-                          children: [
-                            //todo
-                            HeaderPart(),
-                            //todo
-                            StatusDisplayPart(),
-                            //todo
-                            PlayButtonPart(),
-                            //todo
-                            VolumeSliderPart(),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              //todo
+                              HeaderPart(userSettings: userSettings,),
+                              //todo
+                              StatusDisplayPart(),
+                              //todo
+                              PlayButtonPart(),
+                              //todo
+                              VolumeSliderPart(),
+                            ],
+                          ),
                         )
                       ],
                     );
