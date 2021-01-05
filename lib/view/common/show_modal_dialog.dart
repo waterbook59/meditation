@@ -14,7 +14,7 @@ import 'package:meditaition/view/styles.dart';
     backgroundColor: dialogBackgroundColor,
     shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-      top: Radius.circular(24), //タテだけ
+      top: Radius.circular(24), //topだけならタテだけ
     )),
   );
 }

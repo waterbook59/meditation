@@ -11,7 +11,7 @@ class SkipIntroDialog extends StatelessWidget {
       height: 120,
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Center(

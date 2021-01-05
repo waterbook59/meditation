@@ -36,9 +36,9 @@ class MyApp extends StatelessWidget {
         future: viewModel.isSkipIntroScreen(),
         builder: (context,AsyncSnapshot<bool> snapshot){
           if(snapshot.hasData && snapshot.data){
-            //nullじゃなくて、trueの時
+            //nullじゃなくて(hasData)、trueの時(snapshot.data=true)はHomeScreen
             return HomeScreen();
-          }else{
+          }else{//falseの場合はイントロ画面表示
             return IntroScreen();
           }
         }
