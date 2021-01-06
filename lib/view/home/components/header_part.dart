@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meditaition/data_models/user_settings.dart';
-
-enum HeaderType{
-  level,
-  theme,
-  time,
-}
+import 'package:meditaition/generated/l10n.dart';
+import 'package:meditaition/utils/constants.dart';
+import 'package:meditaition/view/common/ripple_widget.dart';
+import 'package:meditaition/view/home/home_screen.dart';
+import 'package:meditaition/view/styles.dart';
+import 'package:meditaition/view_models/main_view_model.dart';
+import 'package:provider/provider.dart';
 
 class HeaderPart extends StatelessWidget {
   final UserSettings userSettings;
@@ -16,30 +18,56 @@ class HeaderPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //３分割したいのでRowの中でExpanded
+//        mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-         _createItem(context,userSettings.levelId,HeaderType.level),
-        _createItem(context,userSettings.themeId,HeaderType.theme),
-        _createItem(context,userSettings.themeId,HeaderType.time),
-
+        Expanded(
+            child:
+                _createItem(context, userSettings.levelId, HeaderType.level)),
+        Expanded(
+            child:
+                _createItem(context, userSettings.themeId, HeaderType.theme)),
+        Expanded(
+            child: _createItem(context, userSettings.themeId, HeaderType.time)),
       ],
     );
   }
 
   Widget _createItem(BuildContext context, int id, HeaderType headerType) {
-    return Column(
-      children: [
-        _createItemIcon(headerType),
-        _displayItemText(context,id,headerType),
-      ],
+    //headerPartが押せるのは、beforeStartとfinishedのときだけ
+
+    return Selector<MainViewModel, RunningStatus>(
+      selector: (context, viewModel) => viewModel.runningStatus,
+      builder: (context, runningStatus, child) =>
+          //1階に画像があるとタッチフィードバックされない=>MaterialでWrapする
+          RippleWidget(
+        //todo     ///headerPartが押せるのは、beforeStartとfinishedのときだけ
+        onTap: (runningStatus != RunningStatus.beforeStart &&
+                runningStatus != RunningStatus.finished)
+            ? () => Fluttertoast.showToast(
+                msg: S.of(context).showSettingsAgain,
+                backgroundColor: dialogBackgroundColor,
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.BOTTOM)
+            : () => _openSettingDialog(context, headerType),
+        child: Column(
+          children: [
+            _createItemIcon(headerType),
+            const SizedBox(
+              height: 8,
+            ),
+            _displayItemText(context, id, headerType),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _createItemIcon(HeaderType headerType) {
     Widget icon;
-    switch(headerType){
+    switch (headerType) {
       case HeaderType.level:
-        icon =  const FaIcon(FontAwesomeIcons.layerGroup);
+        icon = const FaIcon(FontAwesomeIcons.layerGroup);
         break;
       case HeaderType.theme:
         icon = const FaIcon(FontAwesomeIcons.images);
@@ -52,6 +80,28 @@ class HeaderPart extends StatelessWidget {
   }
 
   Widget _displayItemText(BuildContext context, int id, HeaderType headerType) {
-    return Container();
+    //chapter48 context.selectを使ってもレベル・テーマも一緒にbuildされてしまうのでSelector使う
+    Widget displayTextWidget;
+    switch (headerType) {
+      case HeaderType.level:
+        displayTextWidget = Text(levels[id].levelName);
+        break;
+      case HeaderType.theme:
+        displayTextWidget = Text(meisoThemes[id].themeName);
+        break;
+      case HeaderType.time:
+        //時間だけは刻々と変化するのでSelectorでremainingTimeStringが変化した時だけ再描画
+        displayTextWidget = Selector<MainViewModel, String>(
+          selector: (context, viewModel) => viewModel.remainingTimeString,
+          builder: (context, timeString, child) =>
+              displayTextWidget = Text(timeString),
+        );
+    }
+    return displayTextWidget;
+  }
+
+  //todo
+  dynamic _openSettingDialog(BuildContext context, HeaderType headerType) {
+    print('openSettingDialog');
   }
 }

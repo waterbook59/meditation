@@ -19,9 +19,9 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  ///as Map<String, dynamic>明示
+  /// Map<String, dynamic>戻り型明示
   final Map<String, dynamic> messages =
-      _notInlinedMessages(_notInlinedMessages) as Map<String, dynamic>;
+      _notInlinedMessages(_notInlinedMessages) ;
 
   ///staticの後にMap<String,Function>の型明示,プレースホルダ(_ のこと）の前にdynamic明示
   static Map<String, Function> _notInlinedMessages(dynamic _) =>

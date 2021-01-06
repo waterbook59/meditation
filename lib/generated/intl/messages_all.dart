@@ -20,6 +20,7 @@ import 'messages_ja.dart' as messages_ja;
 
 typedef Future<dynamic> LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
+  ///Futureの後ろに<dynamic>型明示
   'en': () => new Future<dynamic>.value(null),
   'ja': () => new Future<dynamic>.value(null),
 };

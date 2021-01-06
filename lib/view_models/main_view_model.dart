@@ -4,6 +4,7 @@ import 'package:meditaition/models/managers/ad_manager.dart';
 import 'package:meditaition/models/managers/in_app_purchase_manager.dart';
 import 'package:meditaition/models/managers/sound_manager.dart';
 import 'package:meditaition/models/repositories/shared_prefs_repository.dart';
+import 'package:meditaition/utils/constants.dart';
 import 'package:meditaition/utils/functions.dart';
 
 class MainViewModel extends ChangeNotifier{
@@ -13,6 +14,9 @@ class MainViewModel extends ChangeNotifier{
   final InAppPurchaseManager inAppPurchaseManager;
 
   UserSettings userSettings;
+
+  RunningStatus runningStatus = RunningStatus.beforeStart;
+
   //瞑想の残り時間
   int remainingTimeSeconds=0;
   String get remainingTimeString => convertTimeFormat(remainingTimeSeconds);
@@ -31,6 +35,7 @@ class MainViewModel extends ChangeNotifier{
   Future<void> getUserSettings() async{
    userSettings=  await sharedPrefsRepository.getUserSettings();
     remainingTimeSeconds = userSettings.timeMinutes*60;//秒変換
+   //remainingTimeStringは秒をmm:ssに変換する関数(300秒=>5:00)
     print(remainingTimeString);
 
    notifyListeners();

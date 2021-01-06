@@ -43,18 +43,22 @@ class HomeScreen extends StatelessWidget {
                       child: const CircularProgressIndicator(),
                     )
                   : Stack(
-                      fit: StackFit.expand,//全画面表示に必要
+                      fit: StackFit.expand, //全画面表示に必要
                       children: [
                         //1階
                         //todo グラデーション付背景画像
-                        DecoratedBackground(theme: meisoThemes[userSettings.themeId],),
+                        DecoratedBackground(
+                          theme: meisoThemes[userSettings.themeId],
+                        ),
                         //2階
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Column(
                             children: [
                               //todo
-                              HeaderPart(userSettings: userSettings,),
+                              HeaderPart(
+                                userSettings: userSettings,
+                              ),
                               //todo
                               StatusDisplayPart(),
                               //todo
