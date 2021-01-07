@@ -31,4 +31,14 @@ class SharedPrefsRepository {
           prefs.getBool(PREF_KEY_IS_SKIP_INTRO) ?? false, //情報がなければイントロ表示
     );
   }
+
+  Future<void> setLevel(int index) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PREF_KEY_LEVEL_ID,index);
+  }
+
+  Future<void> setTime(int timeMinutes) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PREF_KEY_TIME, timeMinutes);
+  }
 }

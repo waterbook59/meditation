@@ -41,5 +41,17 @@ class MainViewModel extends ChangeNotifier{
    notifyListeners();
   }
 
+  Future<void> setLevel(int index) async{
+    await sharedPrefsRepository.setLevel(index);
+    ///shearedPreferencesでレベルを設定した後、
+    ///再度ユーザー設定取りに行く(getSharedPref内でnotifyListenersあり)
+    getUserSettings();
+  }
+
+  Future<void> setTime(int timeMinutes) async{
+    await sharedPrefsRepository.setTime(timeMinutes);
+    getUserSettings();//getSettingsでリビルドされるので時間表示が変わる
+  }
+
 
 }

@@ -5,10 +5,15 @@ import 'package:meditaition/data_models/user_settings.dart';
 import 'package:meditaition/generated/l10n.dart';
 import 'package:meditaition/utils/constants.dart';
 import 'package:meditaition/view/common/ripple_widget.dart';
+import 'package:meditaition/view/common/show_modal_dialog.dart';
+import 'package:meditaition/view/home/components/dialog/level_setting_dialog.dart';
 import 'package:meditaition/view/home/home_screen.dart';
 import 'package:meditaition/view/styles.dart';
 import 'package:meditaition/view_models/main_view_model.dart';
 import 'package:provider/provider.dart';
+
+import 'dialog/theme_setting_dialog.dart';
+import 'dialog/time_setting_dialog.dart';
 
 class HeaderPart extends StatelessWidget {
   final UserSettings userSettings;
@@ -23,10 +28,10 @@ class HeaderPart extends StatelessWidget {
       children: [
         Expanded(
             child:
-                _createItem(context, userSettings.levelId, HeaderType.level)),
+            _createItem(context, userSettings.levelId, HeaderType.level)),
         Expanded(
             child:
-                _createItem(context, userSettings.themeId, HeaderType.theme)),
+            _createItem(context, userSettings.themeId, HeaderType.theme)),
         Expanded(
             child: _createItem(context, userSettings.themeId, HeaderType.time)),
       ],
@@ -37,15 +42,20 @@ class HeaderPart extends StatelessWidget {
     //headerPartが押せるのは、beforeStartとfinishedのときだけ
 
     return Selector<MainViewModel, RunningStatus>(
+      ///RunningStatus(レベル、テーマ、時間)が動いたものだけリビルドされる
       selector: (context, viewModel) => viewModel.runningStatus,
       builder: (context, runningStatus, child) =>
-          //1階に画像があるとタッチフィードバックされない=>MaterialでWrapする
-          RippleWidget(
-        //todo     ///headerPartが押せるのは、beforeStartとfinishedのときだけ
+      //1階に画像があるとタッチフィードバックされない=>MaterialでWrapする
+      RippleWidget(
+
+        ///headerPartが押せるのは、beforeStartとfinishedのときだけ
         onTap: (runningStatus != RunningStatus.beforeStart &&
-                runningStatus != RunningStatus.finished)
-            ? () => Fluttertoast.showToast(
-                msg: S.of(context).showSettingsAgain,
+            runningStatus != RunningStatus.finished)
+            ? () =>
+            Fluttertoast.showToast(
+                msg: S
+                    .of(context)
+                    .showSettingsAgain,
                 backgroundColor: dialogBackgroundColor,
                 toastLength: Toast.LENGTH_LONG,
                 gravity: ToastGravity.BOTTOM)
@@ -90,18 +100,36 @@ class HeaderPart extends StatelessWidget {
         displayTextWidget = Text(meisoThemes[id].themeName);
         break;
       case HeaderType.time:
-        //時間だけは刻々と変化するのでSelectorでremainingTimeStringが変化した時だけ再描画
+      //時間だけは刻々と変化するのでSelectorでremainingTimeStringが変化した時だけ再描画
         displayTextWidget = Selector<MainViewModel, String>(
           selector: (context, viewModel) => viewModel.remainingTimeString,
           builder: (context, timeString, child) =>
-              displayTextWidget = Text(timeString),
+          displayTextWidget = Text(timeString),
         );
     }
     return displayTextWidget;
   }
 
   //todo
-  dynamic _openSettingDialog(BuildContext context, HeaderType headerType) {
-    print('openSettingDialog');
+  Widget _openSettingDialog(BuildContext context, HeaderType headerType) {
+    switch (headerType) {
+      case HeaderType.level:
+        showModalDialog(
+            context: context,
+            dialogWidget: LevelSettingDialog(),
+            isScrollable: false
+        );
+        break;
+      case HeaderType.theme:
+        showModalDialog(context: context,
+            dialogWidget: ThemeSettingDialog(),
+            isScrollable: true);
+        break;
+      case HeaderType.time:
+        showModalDialog(context: context,
+            dialogWidget: TimeSettingDialog(),
+            isScrollable: false);
+        break;
+    }
   }
 }
