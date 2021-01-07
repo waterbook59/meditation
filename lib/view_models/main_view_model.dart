@@ -53,5 +53,10 @@ class MainViewModel extends ChangeNotifier{
     getUserSettings();//getSettingsでリビルドされるので時間表示が変わる
   }
 
+  Future<void> setTheme(int index) async{
+    await sharedPrefsRepository.setTheme(index);
+    getUserSettings();
+  }
+
 
 }

@@ -41,4 +41,9 @@ class SharedPrefsRepository {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(PREF_KEY_TIME, timeMinutes);
   }
+
+  Future<void> setTheme(int index) async{
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PREF_KEY_THEME_ID, index);
+  }
 }
