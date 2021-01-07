@@ -7,7 +7,7 @@ import 'package:meditaition/models/repositories/shared_prefs_repository.dart';
 import 'package:meditaition/utils/constants.dart';
 import 'package:meditaition/utils/functions.dart';
 
-class MainViewModel extends ChangeNotifier{
+class MainViewModel extends ChangeNotifier {
   final SharedPrefsRepository sharedPrefsRepository;
   final SoundManager soundManager;
   final AdManager adManager;
@@ -18,45 +18,51 @@ class MainViewModel extends ChangeNotifier{
   RunningStatus runningStatus = RunningStatus.beforeStart;
 
   //瞑想の残り時間
-  int remainingTimeSeconds=0;
+  int remainingTimeSeconds = 0;
   String get remainingTimeString => convertTimeFormat(remainingTimeSeconds);
 
-  MainViewModel({this.sharedPrefsRepository,this.soundManager,this.adManager, this.inAppPurchaseManager});
+  //todo それぞれのレベルでのインターバルの秒数を格納する変数
+  int intervalRemainingSeconds = 0;
 
-  Future<void> skipIntro() async{
+  MainViewModel(
+      {this.sharedPrefsRepository,
+      this.soundManager,
+      this.adManager,
+      this.inAppPurchaseManager});
+
+  Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
   }
 
-  Future<bool> isSkipIntroScreen() async{
+  Future<bool> isSkipIntroScreen() async {
     return sharedPrefsRepository.isSkipIntroScreen();
 //      await sharedPrefsRepository.isSkipIntroScreen();
   }
 
-  Future<void> getUserSettings() async{
-   userSettings=  await sharedPrefsRepository.getUserSettings();
-    remainingTimeSeconds = userSettings.timeMinutes*60;//秒変換
-   //remainingTimeStringは秒をmm:ssに変換する関数(300秒=>5:00)
+  Future<void> getUserSettings() async {
+    userSettings = await sharedPrefsRepository.getUserSettings();
+    remainingTimeSeconds = userSettings.timeMinutes * 60; //秒変換
+    //remainingTimeStringは秒をmm:ssに変換する関数(300秒=>5:00)
     print(remainingTimeString);
 
-   notifyListeners();
+    notifyListeners();
   }
 
-  Future<void> setLevel(int index) async{
+  Future<void> setLevel(int index) async {
     await sharedPrefsRepository.setLevel(index);
+
     ///shearedPreferencesでレベルを設定した後、
     ///再度ユーザー設定取りに行く(getSharedPref内でnotifyListenersあり)
     getUserSettings();
   }
 
-  Future<void> setTime(int timeMinutes) async{
+  Future<void> setTime(int timeMinutes) async {
     await sharedPrefsRepository.setTime(timeMinutes);
-    getUserSettings();//getSettingsでリビルドされるので時間表示が変わる
+    getUserSettings(); //getSettingsでリビルドされるので時間表示が変わる
   }
 
-  Future<void> setTheme(int index) async{
+  Future<void> setTheme(int index) async {
     await sharedPrefsRepository.setTheme(index);
     getUserSettings();
   }
-
-
 }
