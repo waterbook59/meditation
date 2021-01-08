@@ -11,3 +11,5 @@ final statusLowerTextStyle =  TextStyle(fontSize: 48,fontWeight: FontWeight.bold
 
 const double largePlayIconSize = 200;
 const double smallPlayIconSize = 54;
+
+final speedDialLabelBackgroundColor = Colors.grey;

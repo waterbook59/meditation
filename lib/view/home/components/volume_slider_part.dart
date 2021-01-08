@@ -28,7 +28,10 @@ class VolumeSliderPart extends StatelessWidget {
               onChanged: (newVolume)=>_changeVolume(newVolume,context),
             ),
           ),
+          //todo FaIcon使わなくてIconでいいのは？見た目はかわらない感じ
           const Icon(FontAwesomeIcons.volumeUp),
+//          SizedBox(width: 10,),
+//          FaIcon(FontAwesomeIcons.volumeUp),
         ],
       ),
     );
