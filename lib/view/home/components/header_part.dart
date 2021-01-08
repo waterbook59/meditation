@@ -111,7 +111,7 @@ class HeaderPart extends StatelessWidget {
   }
 
   //todo
-  Widget _openSettingDialog(BuildContext context, HeaderType headerType) {
+  void _openSettingDialog(BuildContext context, HeaderType headerType) {
     switch (headerType) {
       case HeaderType.level:
         showModalDialog(

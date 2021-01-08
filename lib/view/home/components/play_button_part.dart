@@ -63,8 +63,22 @@ class PlayButtonPart extends StatelessWidget {
 
   //todo
   void _onPlayButtonPressed(BuildContext context,
-      RunningStatus runningStatus) {}
+      RunningStatus runningStatus) {
+    final viewModel = context.read<MainViewModel>();
+    if(runningStatus == RunningStatus.beforeStart){
+      viewModel.startMeditation();
+    }else if(runningStatus == RunningStatus.pause){
+      viewModel.resumeMeditation();
+    }else if(runningStatus == RunningStatus.finished){
+      viewModel.resetMeditation();
+    }else{
+      viewModel.pauseMeditation();
+    }
+  }
 
   //todo
-  void _onStopButtonPressed(BuildContext context) {}
+  void _onStopButtonPressed(BuildContext context) {
+    final viewModel = context.read<MainViewModel>()
+    ..resetMeditation();
+  }
 }

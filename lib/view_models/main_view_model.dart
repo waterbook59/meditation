@@ -24,6 +24,9 @@ class MainViewModel extends ChangeNotifier {
   //todo それぞれのレベルでのインターバルの秒数を格納する変数
   int intervalRemainingSeconds = 0;
 
+  //todo volume数値
+  double volume = 0;
+
   MainViewModel(
       {this.sharedPrefsRepository,
       this.soundManager,
@@ -64,5 +67,19 @@ class MainViewModel extends ChangeNotifier {
   Future<void> setTheme(int index) async {
     await sharedPrefsRepository.setTheme(index);
     getUserSettings();
+  }
+
+  //todo
+  void startMeditation() {}
+  //todo
+  void resumeMeditation() {}
+  //todo
+  void resetMeditation() {}
+  //todo
+  void pauseMeditation() {}
+  //todo 音量調整
+  void changeVolume(double newVolume) {
+    volume = newVolume;
+    notifyListeners();
   }
 }

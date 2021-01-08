@@ -66,6 +66,7 @@ class StatusDisplayPart extends StatelessWidget {
         displayText = '';
         break;
     }
+    return displayText;
   }
 
   String _lowerLargeText(BuildContext context, RunningStatus runningStatus,
