@@ -14,3 +14,5 @@ enum RunningStatus {
   pause,
   finished,
 }
+
+const int initialInterval =3;
