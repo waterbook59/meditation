@@ -47,7 +47,8 @@ class SoundManager {
     return rootBundle.load(soundPath).then((value) => _soundpool.load(value));
   }
 
-  void startBgm({String bellPath, String bgmPath, bool isNeedBgm}) {
+  ///Futureに変更
+  Future<void> startBgm({String bellPath, String bgmPath, bool isNeedBgm}) {
     _bellPlayer
       ..setVolume(bellVolume)
       ..play();

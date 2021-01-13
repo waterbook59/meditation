@@ -67,17 +67,17 @@ class MainViewModel extends ChangeNotifier {
 
     ///shearedPreferencesでレベルを設定した後、
     ///再度ユーザー設定取りに行く(getSharedPref内でnotifyListenersあり)
-    getUserSettings();
+    await getUserSettings();
   }
 
   Future<void> setTime(int timeMinutes) async {
     await sharedPrefsRepository.setTime(timeMinutes);
-    getUserSettings(); //getSettingsでリビルドされるので時間表示が変わる
+    await getUserSettings(); //getSettingsでリビルドされるので時間表示が変わる
   }
 
   Future<void> setTheme(int index) async {
     await sharedPrefsRepository.setTheme(index);
-    getUserSettings();
+    await getUserSettings();
   }
 
   /// beforeStart=>onStart タイマー(Timer.periodic)処理
@@ -128,7 +128,8 @@ class MainViewModel extends ChangeNotifier {
         bgmPath: bgmPath, bellPath: bellPath, isNeedBgm: isNeedBgm);
   }
 
-  void _startBgm()  {
+
+  Future<void> _startBgm() async{
     final levelId = userSettings.levelId;
     final themeId = userSettings.themeId;
 
@@ -138,7 +139,7 @@ class MainViewModel extends ChangeNotifier {
     final bgmPath = isNeedBgm ? meisoThemes[themeId].soundPath : null;
     final bellPath = levels[levelId].belPath;
 
-    soundManager.startBgm(
+    await soundManager.startBgm(
         bellPath: bellPath, bgmPath: bgmPath, isNeedBgm: isNeedBgm);
   }
 
@@ -175,7 +176,7 @@ class MainViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //todo 音量調整
+  // 音量調整
   void changeVolume(double newVolume) {
 //    volume = newVolume;
   soundManager.changeVolume(newVolume);
@@ -208,18 +209,16 @@ class MainViewModel extends ChangeNotifier {
       }
 
       //ポーズのとき音も止める
-      if(runningStatus ==RunningStatus.pause){
+      if(runningStatus == RunningStatus.pause){
         timer.cancel();
         isTimerCanceled = true;
         _stopBgm();
-      }else if(runningStatus ==RunningStatus.finished){
+      }else if(runningStatus == RunningStatus.finished){
         timer.cancel();
         isTimerCanceled = true;
         _stopBgm();
         _ringFinalGong();
-        
       }
-
       //毎秒毎秒描画しなおすのでnotifyListeners
       notifyListeners();
     });
