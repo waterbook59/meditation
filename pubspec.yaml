@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^7.1.6
   flutter_speed_dial: ^1.2.5
   soundpool: ^1.1.3
+  assets_audio_player: ^2.0.13+1
 
 dev_dependencies:
   flutter_test:

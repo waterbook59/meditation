@@ -23,10 +23,14 @@ class MainViewModel extends ChangeNotifier {
 
   //瞑想の残り時間
   int remainingTimeSeconds = initialInterval;
+
   String get remainingTimeString => convertTimeFormat(remainingTimeSeconds);
 
   // それぞれのレベルでのインターバルの秒数を格納する変数
   int intervalRemainingSeconds = 0;
+
+  //ステータス判定のための開始からの経過時間
+  int timeElapsedInOneCycle = 0;
 
   //todo volume数値
   double volume = 0;
@@ -80,46 +84,59 @@ class MainViewModel extends ChangeNotifier {
 
     //タイマー発動時 初期値設定 初期値３、カウント０
     intervalRemainingSeconds = initialInterval;
-    int cnt =0;
+    int cnt = 0;
 
     //秒間隔(duration)１秒ごと、ex)2秒後,残り時間:初期値３引くカウンター２=1
     Timer.periodic(Duration(seconds: 1),
-            //ここがコールバック
-            (timer) async{
+        //ここがコールバック
+        (timer) async {
       //毎秒カウンターを１上げていく
-      cnt +=1;
+      cnt += 1;
       //初期値からカウンター分引いていく
-      intervalRemainingSeconds =initialInterval-cnt;
+      intervalRemainingSeconds = initialInterval - cnt;
 
-      if(intervalRemainingSeconds <=0){
+      if (intervalRemainingSeconds <= 0) {
         //残り時間0以下でタイマーキャンセルする
         timer.cancel();
         await prepareSounds();
         _startMeditationTimer();
-
-      }//カウントダウンしてる途中にポーズ=>タイマー止めて、beforeStartに戻る
-      else if(runningStatus == RunningStatus.pause){
+      } //カウントダウンしてる途中にポーズ=>タイマー止めて、beforeStartに戻る
+      else if (runningStatus == RunningStatus.pause) {
         timer.cancel();
-              //beforeStartに戻る
+        //beforeStartに戻る
         pauseMeditation();
       }
-    notifyListeners();
+      notifyListeners();
     });
   }
 
-  Future<void> prepareSounds() async{
+  Future<void> prepareSounds() async {
     final levelId = userSettings.levelId;
     final themeId = userSettings.themeId;
 
     //themeIdが静寂以外の時はtrue
     final isNeedBgm = themeId != THEME_ID_SILENCE;
     //静寂以外の場合はsoundPath(BGM用)あり、静寂のときは効果音のみでBGMなし
-    final bgmPath = isNeedBgm ? meisoThemes[themeId].soundPath:null;
+    final bgmPath = isNeedBgm ? meisoThemes[themeId].soundPath : null;
     final bellPath = levels[levelId].belPath;
 
     //bool値があるので名前付で渡す
     await soundManager.prepareSounds(
-        bgmPath:bgmPath,bellPath:bellPath,isNeedBgm:isNeedBgm);
+        bgmPath: bgmPath, bellPath: bellPath, isNeedBgm: isNeedBgm);
+  }
+
+  Future<void> _startBgm() async {
+    final levelId = userSettings.levelId;
+    final themeId = userSettings.themeId;
+
+    //themeIdが静寂以外の時はtrue
+    final isNeedBgm = themeId != THEME_ID_SILENCE;
+    //静寂以外の場合はsoundPath(BGM用)あり、静寂のときは効果音のみでBGMなし
+    final bgmPath = isNeedBgm ? meisoThemes[themeId].soundPath : null;
+    final bellPath = levels[levelId].belPath;
+
+    await soundManager.startBgm(
+        bellPath: bellPath, bgmPath: bgmPath, isNeedBgm: isNeedBgm);
   }
 
   //todo
@@ -133,6 +150,7 @@ class MainViewModel extends ChangeNotifier {
     runningStatus = RunningStatus.pause;
     notifyListeners();
   }
+
   //todo 音量調整
   void changeVolume(double newVolume) {
     volume = newVolume;
@@ -141,8 +159,78 @@ class MainViewModel extends ChangeNotifier {
 
   //todo 瞑想処理
   void _startMeditationTimer() {
-    runningStatus = RunningStatus.inhale;
+//    runningStatus = RunningStatus.inhale;
+
+    //サイクルに合わせて残り時間調節(サイクル時間の半分を基準にして)
+    remainingTimeSeconds = _adjustMeditationTimer(remainingTimeSeconds);
+    notifyListeners();
+
+    timeElapsedInOneCycle = 0;
+    _evaluateStatus();
+    //音を出す処理
+    _startBgm();
+
+    //ユーザー操作に関与しない瞑想ステータスのタイマー管理(吸う・止める・吐く・終わり)
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      remainingTimeSeconds -= 1;
+
+      //ユーザーが操作するもの以外のステータスの秒計算
+      if (runningStatus != RunningStatus.beforeStart &&
+          runningStatus != RunningStatus.onStart &&
+          runningStatus != RunningStatus.pause) {
+        _evaluateStatus();
+      }
+      //毎秒毎秒描画しなおすのでnotifyListeners
+      notifyListeners();
+    });
   }
 
+  int _adjustMeditationTimer(int remainingTimeSeconds) {
+    final totalInterval = levels[userSettings.levelId].totalInterval;
+    //remainingTimeSeconds/totalIntervalの余り
+    ///remainderはそのままだとnumでエラーでるので、intへキャストしておく
+    final remainder = remainingTimeSeconds.remainder(totalInterval) as int;
 
+    //余りがサイクル時間の半分より長い場合、トータル時間を長く
+    if (remainder > (totalInterval / 2)) {
+      return remainingTimeSeconds + (totalInterval - remainder);
+    } else {
+      return remainingTimeSeconds - remainder;
+    }
+  }
+
+  //ユーザーが操作するもの以外のステータス判定・秒計算
+  void _evaluateStatus() {
+    //残り時間が0以下になったらfinished
+    if (remainingTimeSeconds <= 0) {
+      runningStatus = RunningStatus.finished;
+      return;
+    }
+
+    final inhaleInterval = levels[userSettings.levelId].inhaleInterval;
+    final holdInterval = levels[userSettings.levelId].holdInterval;
+    final totalInterval = levels[userSettings.levelId].totalInterval;
+
+    //経過時間との比較でステータスを判定
+    if (timeElapsedInOneCycle >= 0 && timeElapsedInOneCycle < inhaleInterval) {
+      runningStatus = RunningStatus.inhale;
+      //StatusDisplayPartに表示されるカウントダウン時間
+      //決められた吸う時間から経過時間を引いていく
+      intervalRemainingSeconds = inhaleInterval - timeElapsedInOneCycle;
+    } else if (timeElapsedInOneCycle < inhaleInterval + holdInterval) {
+      runningStatus = RunningStatus.hold;
+      intervalRemainingSeconds =
+          (inhaleInterval + holdInterval) - timeElapsedInOneCycle;
+    }else if(timeElapsedInOneCycle < totalInterval ){
+      runningStatus = RunningStatus.exhale;
+      intervalRemainingSeconds = totalInterval -timeElapsedInOneCycle;
+    }
+
+    timeElapsedInOneCycle = (timeElapsedInOneCycle>= totalInterval -1)
+    //サイクルが終わったら経過時間を0に戻す
+    ?0
+    //サイクル中は経過時間１足していく
+        :timeElapsedInOneCycle +1;
+
+  }
 }
