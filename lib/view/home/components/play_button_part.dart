@@ -13,6 +13,10 @@ class PlayButtonPart extends StatelessWidget {
     final runningStatus = context.select<MainViewModel, RunningStatus>
       ((viewModel) => viewModel.runningStatus);
 
+    //isTimerCanceledがtrueのときでないとstopCircleださない
+    final isTimerCanceled = context.select<MainViewModel, bool>
+      ((viewModel) => viewModel.isTimerCanceled);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Stack(
@@ -26,7 +30,8 @@ class PlayButtonPart extends StatelessWidget {
           Positioned(
               left: 8,
               bottom: 0,
-              child: (runningStatus == RunningStatus.pause)
+              //タイマー2重で走らないようにステータスがポーズ且つisTimerCanceledがtrueの時しか出てこないようにする
+              child: (runningStatus == RunningStatus.pause && isTimerCanceled)
                   ? RippleWidget(
                 child: const Icon(
                   FontAwesomeIcons.stopCircle, size: smallPlayIconSize,),
@@ -68,9 +73,10 @@ class PlayButtonPart extends StatelessWidget {
     if(runningStatus == RunningStatus.beforeStart){
       viewModel.startMeditation();
     }else if(runningStatus == RunningStatus.pause){
-      viewModel.resumeMeditation();
+      //isTimerCanceledがtrueでないと押せないようにする
+      if(viewModel.isTimerCanceled)viewModel.resumeMeditation();
     }else if(runningStatus == RunningStatus.finished){
-      viewModel.resetMeditation();
+      if(viewModel.isTimerCanceled)viewModel.resetMeditation();
     }else{
       viewModel.pauseMeditation();
     }

@@ -53,4 +53,25 @@ class SoundManager {
       ..play();
     _bgmPlayer.play();
   }
+
+  void stopBgm({bool isNeedBgm}) {
+    _bellPlayer.stop();
+    if(isNeedBgm)_bgmPlayer.stop();
+  }
+
+  void ringFinalGong() {
+    _soundpool.play(gongSoundId);
+  }
+
+  void changeVolume(double newVolume) {
+    bellVolume = newVolume /100;
+    _bellPlayer.setVolume(bellVolume);
+    _soundpool.setVolume(soundId: gongSoundId,volume: bellVolume);
+  }
+
+  void dispose() {
+    _soundpool.release();
+    _bellPlayer.dispose();
+    _bgmPlayer.dispose();
+  }
 }

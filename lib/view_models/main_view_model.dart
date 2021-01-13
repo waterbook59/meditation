@@ -32,8 +32,11 @@ class MainViewModel extends ChangeNotifier {
   //ステータス判定のための開始からの経過時間
   int timeElapsedInOneCycle = 0;
 
-  //todo volume数値
-  double volume = 0;
+  //タイマーキャンセルされたかどうか
+  bool isTimerCanceled = true;
+
+  // volume数値
+  double get volume => soundManager.bellVolume*100;
 
   MainViewModel(
       {this.sharedPrefsRepository,
@@ -77,7 +80,7 @@ class MainViewModel extends ChangeNotifier {
     getUserSettings();
   }
 
-  //todo beforeStart=>onStart タイマー(Timer.periodic)処理
+  /// beforeStart=>onStart タイマー(Timer.periodic)処理
   void startMeditation() {
     runningStatus = RunningStatus.onStart;
     notifyListeners();
@@ -87,7 +90,7 @@ class MainViewModel extends ChangeNotifier {
     int cnt = 0;
 
     //秒間隔(duration)１秒ごと、ex)2秒後,残り時間:初期値３引くカウンター２=1
-    Timer.periodic(Duration(seconds: 1),
+    Timer.periodic(const Duration(seconds: 1),
         //ここがコールバック
         (timer) async {
       //毎秒カウンターを１上げていく
@@ -103,8 +106,8 @@ class MainViewModel extends ChangeNotifier {
       } //カウントダウンしてる途中にポーズ=>タイマー止めて、beforeStartに戻る
       else if (runningStatus == RunningStatus.pause) {
         timer.cancel();
-        //beforeStartに戻る
-        pauseMeditation();
+        //beforeStartに戻る pauseMeditation()にしたら開始前の状態でもポーズ
+        resetMeditation();
       }
       notifyListeners();
     });
@@ -125,7 +128,7 @@ class MainViewModel extends ChangeNotifier {
         bgmPath: bgmPath, bellPath: bellPath, isNeedBgm: isNeedBgm);
   }
 
-  Future<void> _startBgm() async {
+  void _startBgm()  {
     final levelId = userSettings.levelId;
     final themeId = userSettings.themeId;
 
@@ -135,29 +138,51 @@ class MainViewModel extends ChangeNotifier {
     final bgmPath = isNeedBgm ? meisoThemes[themeId].soundPath : null;
     final bellPath = levels[levelId].belPath;
 
-    await soundManager.startBgm(
+    soundManager.startBgm(
         bellPath: bellPath, bgmPath: bgmPath, isNeedBgm: isNeedBgm);
   }
 
-  //todo
-  void resumeMeditation() {}
+  void _stopBgm() {
+    final themeId = userSettings.themeId;
+    //themeIdが静寂以外の時はtrue
+    final isNeedBgm = themeId != THEME_ID_SILENCE;
+    soundManager.stopBgm(isNeedBgm:isNeedBgm);
 
-  //todo
-  void resetMeditation() {}
+  }
 
-  //todo ポーズしたときにbeforeStartに戻る
+  //再開する
+  void resumeMeditation() {
+    //本体のタイマー回す
+    _startMeditationTimer();
+  }
+
+  //ポーズしたときに停止押すとbefore_startの状態に戻る
+  void resetMeditation() {
+    runningStatus = RunningStatus.beforeStart;
+    //StatusDisplayに映る秒を初期の３にもどす
+    intervalRemainingSeconds = initialInterval;
+    remainingTimeSeconds = userSettings.timeMinutes * 60;
+    timeElapsedInOneCycle = 0;
+    notifyListeners();
+
+  }
+
+  //ポーズ
   void pauseMeditation() {
+    //タイマー2重防止
+    isTimerCanceled = false;
     runningStatus = RunningStatus.pause;
     notifyListeners();
   }
 
   //todo 音量調整
   void changeVolume(double newVolume) {
-    volume = newVolume;
+//    volume = newVolume;
+  soundManager.changeVolume(newVolume);
     notifyListeners();
   }
 
-  //todo 瞑想処理
+  /// 瞑想処理
   void _startMeditationTimer() {
 //    runningStatus = RunningStatus.inhale;
 
@@ -172,6 +197,7 @@ class MainViewModel extends ChangeNotifier {
 
     //ユーザー操作に関与しない瞑想ステータスのタイマー管理(吸う・止める・吐く・終わり)
     Timer.periodic(const Duration(seconds: 1), (timer) {
+      isTimerCanceled = false;
       remainingTimeSeconds -= 1;
 
       //ユーザーが操作するもの以外のステータスの秒計算
@@ -180,10 +206,26 @@ class MainViewModel extends ChangeNotifier {
           runningStatus != RunningStatus.pause) {
         _evaluateStatus();
       }
+
+      //ポーズのとき音も止める
+      if(runningStatus ==RunningStatus.pause){
+        timer.cancel();
+        isTimerCanceled = true;
+        _stopBgm();
+      }else if(runningStatus ==RunningStatus.finished){
+        timer.cancel();
+        isTimerCanceled = true;
+        _stopBgm();
+        _ringFinalGong();
+        
+      }
+
       //毎秒毎秒描画しなおすのでnotifyListeners
       notifyListeners();
     });
   }
+
+
 
   int _adjustMeditationTimer(int remainingTimeSeconds) {
     final totalInterval = levels[userSettings.levelId].totalInterval;
@@ -233,4 +275,17 @@ class MainViewModel extends ChangeNotifier {
         :timeElapsedInOneCycle +1;
 
   }
+
+  void _ringFinalGong() {
+    soundManager.ringFinalGong();
+  }
+
+
+  //ChangeNotifierは破棄するメソッドもっている
+@override
+  void dispose() {
+    super.dispose();
+    soundManager.dispose();
+  }
+
 }
