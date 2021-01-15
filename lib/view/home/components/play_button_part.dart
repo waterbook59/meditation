@@ -71,13 +71,17 @@ class PlayButtonPart extends StatelessWidget {
       RunningStatus runningStatus) {
     final viewModel = context.read<MainViewModel>();
     if(runningStatus == RunningStatus.beforeStart){
+      print('beforeStartで再生ボタンポチっ');
       viewModel.startMeditation();
     }else if(runningStatus == RunningStatus.pause){
       //isTimerCanceledがtrueでないと押せないようにする
+      print('pauseで再生ボタンポチっ');
       if(viewModel.isTimerCanceled)viewModel.resumeMeditation();
     }else if(runningStatus == RunningStatus.finished){
+      print('finishedでボタンポチっ');
       if(viewModel.isTimerCanceled)viewModel.resetMeditation();
     }else{
+      print('再生止めるボタンポチっ');
       viewModel.pauseMeditation();
     }
   }

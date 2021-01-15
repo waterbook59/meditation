@@ -22,12 +22,12 @@ class MainViewModel extends ChangeNotifier {
   RunningStatus runningStatus = RunningStatus.beforeStart;
 
   //瞑想の残り時間
-  int remainingTimeSeconds = initialInterval;
+  int remainingTimeSeconds = 0;
 
   String get remainingTimeString => convertTimeFormat(remainingTimeSeconds);
 
   // それぞれのレベルでのインターバルの秒数を格納する変数
-  int intervalRemainingSeconds = 0;
+  int intervalRemainingSeconds = initialInterval;
 
   //ステータス判定のための開始からの経過時間
   int timeElapsedInOneCycle = 0;
@@ -58,7 +58,6 @@ class MainViewModel extends ChangeNotifier {
     remainingTimeSeconds = userSettings.timeMinutes * 60; //秒変換
     //remainingTimeStringは秒をmm:ssに変換する関数(300秒=>5:00)
     print(remainingTimeString);
-
     notifyListeners();
   }
 
@@ -82,6 +81,7 @@ class MainViewModel extends ChangeNotifier {
 
   /// beforeStart=>onStart タイマー(Timer.periodic)処理
   void startMeditation() {
+    print('soundManger:startMeditation()');
     runningStatus = RunningStatus.onStart;
     notifyListeners();
 
@@ -153,7 +153,10 @@ class MainViewModel extends ChangeNotifier {
 
   //再開する
   void resumeMeditation() {
+    print('viewModel:resumeMeditation()');
     //本体のタイマー回す
+    ///再開時もprepareSounds入れてみる=>ダメでした
+//    await prepareSounds();
     _startMeditationTimer();
   }
 
@@ -187,6 +190,7 @@ class MainViewModel extends ChangeNotifier {
   void _startMeditationTimer() {
 //    runningStatus = RunningStatus.inhale;
 
+    print('viewModel:_startMeditationTimer()');
     //サイクルに合わせて残り時間調節(サイクル時間の半分を基準にして)
     remainingTimeSeconds = _adjustMeditationTimer(remainingTimeSeconds);
     notifyListeners();
