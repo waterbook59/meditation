@@ -23,7 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
 
   ///staticの後にMap<String,Function>の型明示,プレースホルダ(_ のこと）の前にdynamic明示
-  static  Map<String, Function> _notInlinedMessages(dynamic _) => <String, Function> {
+  static Map<String, dynamic>_notInlinedMessages(dynamic _) => <String, Function> {
     "alreadyPurchased" : MessageLookupByLibrary.simpleMessage("このアイテムはすでに購入済みです。"),
     "beforeStart" : MessageLookupByLibrary.simpleMessage("開始前"),
     "deleteAd" : MessageLookupByLibrary.simpleMessage("広告を消す"),
