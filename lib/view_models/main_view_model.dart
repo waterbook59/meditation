@@ -38,11 +38,16 @@ class MainViewModel extends ChangeNotifier {
   // volume数値
   double get volume => soundManager.bellVolume*100;
 
+  //MainViewModelができたときにinitAdmob呼び出す(AdMobSDKを初期化)
   MainViewModel(
       {this.sharedPrefsRepository,
       this.soundManager,
       this.adManager,
-      this.inAppPurchaseManager});
+      this.inAppPurchaseManager}){
+    adManager
+        ..initAdmob()
+        ..initBannerAd();
+  }
 
   Future<void> skipIntro() async {
     await sharedPrefsRepository.skipIntro();
@@ -283,12 +288,19 @@ class MainViewModel extends ChangeNotifier {
     soundManager.ringFinalGong();
   }
 
+  void loadBannerAd() {
+    adManager.loadBannerAd();
+  }
+
 
   //ChangeNotifierは破棄するメソッドもっている
 @override
   void dispose() {
     super.dispose();
     soundManager.dispose();
+    adManager.dispose();
   }
+
+
 
 }

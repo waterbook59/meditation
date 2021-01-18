@@ -34,16 +34,18 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+//         classpath 'com.android.tools.build:gradle:4.1.0'追加時に下記追加
+        checkReleaseBuilds false
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.waterboook.meditaition"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
+//        multiDexEnabled true
     }
 
     buildTypes {

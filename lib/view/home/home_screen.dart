@@ -26,9 +26,11 @@ class HomeScreen extends StatelessWidget {
 
     ///ユーザー設定をsharedPreferencesから取ってくる
 //    final viewModel = Provider.of<MainViewModel>(context,listen:false);
+    //AdmobはhomeScreenで呼び出し
     Future<dynamic>(() {
       final viewModel = context.read<MainViewModel>();
-      return viewModel.getUserSettings();
+      return viewModel..getUserSettings()
+          ..loadBannerAd();
     });
 
     return SafeArea(
@@ -40,7 +42,7 @@ class HomeScreen extends StatelessWidget {
             builder: (context, userSettings, child) {
               return userSettings == null
                   ? const Center(
-                      child: const CircularProgressIndicator(),
+                      child:  CircularProgressIndicator(),
                     )
                   : Stack(
                       fit: StackFit.expand, //全画面表示に必要
