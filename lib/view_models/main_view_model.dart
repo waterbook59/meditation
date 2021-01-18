@@ -46,7 +46,8 @@ class MainViewModel extends ChangeNotifier {
       this.inAppPurchaseManager}){
     adManager
         ..initAdmob()
-        ..initBannerAd();
+        ..initBannerAd()
+        ..initInterstitialAd();
   }
 
   Future<void> skipIntro() async {
@@ -60,7 +61,10 @@ class MainViewModel extends ChangeNotifier {
 
   Future<void> getUserSettings() async {
     userSettings = await sharedPrefsRepository.getUserSettings();
+    //本番用
     remainingTimeSeconds = userSettings.timeMinutes * 60; //秒変換
+    //テスト用
+//    remainingTimeSeconds = 10;
     //remainingTimeStringは秒をmm:ssに変換する関数(300秒=>5:00)
     print(remainingTimeString);
     notifyListeners();
@@ -292,6 +296,10 @@ class MainViewModel extends ChangeNotifier {
     adManager.loadBannerAd();
   }
 
+  void loadInterstitialAd() {
+    adManager.loadInterstitialAd();
+  }
+
 
   //ChangeNotifierは破棄するメソッドもっている
 @override
@@ -300,6 +308,8 @@ class MainViewModel extends ChangeNotifier {
     soundManager.dispose();
     adManager.dispose();
   }
+
+
 
 
 

@@ -26,7 +26,8 @@ class HomeScreen extends StatelessWidget {
 
     ///ユーザー設定をsharedPreferencesから取ってくる
 //    final viewModel = Provider.of<MainViewModel>(context,listen:false);
-    //AdmobはhomeScreenで呼び出し
+    //Admobのバナー広告はhomeScreenで呼び出し
+    // interstitial広告はviewModelのRunningStatus.finishedで呼び出し
     Future<dynamic>(() {
       final viewModel = context.read<MainViewModel>();
       return viewModel..getUserSettings()

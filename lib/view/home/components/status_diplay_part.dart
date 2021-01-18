@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 class StatusDisplayPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ///runningStatusに変更があったときだけ再描画
+    ///runningStatusに変更があったときだけ再描画(buildメソッド回る)
+    ///
     final runningStatus = context.select<MainViewModel, RunningStatus>(
         (viewModel) => viewModel.runningStatus);
 //    final intervalRemainingSeconds =
@@ -64,6 +65,8 @@ class StatusDisplayPart extends StatelessWidget {
         break;
       case RunningStatus.finished:
         displayText = '';
+        ///Interstitial広告呼び出し
+        loadInterstitialAd(context);
         break;
     }
     return displayText;
@@ -80,5 +83,12 @@ class StatusDisplayPart extends StatelessWidget {
       displayText =intervalRemainingSeconds.toString();
     }
     return displayText;
+  }
+
+  void loadInterstitialAd(BuildContext context) {
+    //build内なので、context.readはエラー
+//    final viewModel = context.read<MainViewModel>();
+  final viewModel = Provider.of<MainViewModel>(context,listen: false);
+    viewModel.loadInterstitialAd();
   }
 }
