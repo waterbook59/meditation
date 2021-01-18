@@ -50,3 +50,4 @@ ios/Runner/GoogleService-Info.plist
 # Admobのキー
 android/app/src/main/AndroidManifest.xml
 ios/Runner/Info.plist
+lib/models/managers/ad_manager.dart
