@@ -11,8 +11,8 @@ class ThemeSettingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 24, left: 8, right: 8, bottom: 8),
-
-      child: Stack(//Stack&Positioned 中級編vol.1(newsfeed参照)
+      child: Stack(
+        //Stack&Positioned 中級編vol.1(newsfeed参照)
         children: [
           Column(
             children: [
@@ -24,7 +24,7 @@ class ThemeSettingDialog extends StatelessWidget {
                 height: 8,
               ),
 
-              ///Column内で下がおーばーA RenderFlex overflowed by 114 pixels on the bottom.
+      ///Column内で下がおーばーA RenderFlex overflowed by 114 pixels on the bottom.
               ///ExpandedでGridView.countをラップ
               Expanded(
                 child: GridView.count(
@@ -47,6 +47,7 @@ class ThemeSettingDialog extends StatelessWidget {
                               ),
 
                               ///文字が左下なのを中央にPaddingつけてテキスト中央に
+                              //広告とかぶるのがいやならfooter=>headerに変更
                               footer: Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: Center(
@@ -58,11 +59,12 @@ class ThemeSettingDialog extends StatelessWidget {
               )
             ],
           ),
-          Positioned(//右上にxボタン設置
-            top:8,right: 8,
+          Positioned(
+            //右上にxボタン設置
+            top: 8, right: 8,
             child: RippleWidget(
               child: const FaIcon(FontAwesomeIcons.windowClose),
-              onTap: ()=>Navigator.pop(context),
+              onTap: () => Navigator.pop(context),
             ),
           ),
         ],
@@ -70,8 +72,7 @@ class ThemeSettingDialog extends StatelessWidget {
     );
   }
 
-
-  void _setTheme(BuildContext context, int index) async{
+  void _setTheme(BuildContext context, int index) async {
     final viewModel = context.read<MainViewModel>();
     viewModel.setTheme(index);
   }

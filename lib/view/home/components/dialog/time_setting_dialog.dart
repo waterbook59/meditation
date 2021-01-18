@@ -22,8 +22,9 @@ class TimeSettingDialog extends StatelessWidget {
           },
         ));
 
-    return SizedBox(//ダイアログの高さ伸びすぎるので設定
-      height: 180,
+    return SizedBox(
+      //ダイアログの高さ伸びすぎるので設定&したすぎるとバナーかぶるので設定
+      height: 240,
       child: Column(
         children: [
           const SizedBox(height: 8,),
